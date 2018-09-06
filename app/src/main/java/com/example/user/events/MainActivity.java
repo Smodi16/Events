@@ -6,8 +6,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import static java.security.AccessController.getContext;
+
 public class MainActivity extends AppCompatActivity implements
-fragment1.FrgamentInteractionListener{
+fragment1.FragmentInteractionListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,9 +28,9 @@ fragment1.FrgamentInteractionListener{
     public void onEventSelect(Event event) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.frag1,new fragment2(),"fragment 2");
+      //  ft.add(R.id.frag1,new fragment2(),"fragment 2");
+       // AppCompatActivity activity = (AppCompatActivity)view.getContext();
+ getSupportFragmentManager().beginTransaction().replace(R.id.frag1, new fragment2()).addToBackStack(null).commit();
         ft.commit();
     }
-
-
 }

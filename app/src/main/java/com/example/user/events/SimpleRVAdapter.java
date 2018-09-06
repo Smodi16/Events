@@ -19,8 +19,7 @@ import static java.security.AccessController.getContext;
 
 public class SimpleRVAdapter extends RecyclerView.Adapter<SimpleViewHolder> {
     List<Event> events;
-    fragment1.FrgamentInteractionListener listener;
-    public SimpleRVAdapter(fragment1.FrgamentInteractionListener listener, List<Event> events){
+    public SimpleRVAdapter(List<Event> events){
         this.events = events;
     }
 
@@ -35,14 +34,6 @@ public class SimpleRVAdapter extends RecyclerView.Adapter<SimpleViewHolder> {
     @Override
     public void onBindViewHolder(SimpleViewHolder holder, int position) {
         holder.textView.setText(events.get(position).getname());
-        holder.textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               // AppCompatActivity activity = (AppCompatActivity)v.getContext();
-                //activity.getSupportFragmentManager().beginTransaction().replace(R.id.frag1, new fragment2()).addToBackStack(null).commit();
-                listener.onEventSelect(null);
-            }
-        });
     }
 
     @Override

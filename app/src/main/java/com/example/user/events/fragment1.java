@@ -1,5 +1,6 @@
 package com.example.user.events;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -30,28 +31,33 @@ import java.util.List;
 
 public class fragment1 extends Fragment {
     ArrayAdapter<Event> adapter;
-    List<Event> arrayList = new ArrayList<>();
+    List<Event> arrayList;
+    FragmentInteractionListener listener;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
+    @Override
+    public void onAttach(Context context) {
+        if(context instanceof FragmentInteractionListener) {
+            super.onAttach(context);
+            listener = (FragmentInteractionListener)context;
+        }
+        else
+            throw new IllegalStateException("context must be instance of FragmentInteractionListener");
+
+    }
+
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view= inflater.inflate(R.layout.fragment1,null);
-        /**   RecyclerView mRecyclerView = (RecyclerView) view.findViewById(android.R.id.list);
-         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this.getActivity());
-         Log.d("debugMode", "The application stopped after this");
-         mRecyclerView.setLayoutManager(mLayoutManager);
 
-         // mAdapter = new RecyclerAdapter(getNames());
-         mRecyclerView.setAdapter(adapter);
-         // TextView textView=(TextView)view.findViewById(R.id.textView);
-         //textView.setText("Hello");*/
         DatabaseReference reference = database.getReference().child("Events");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()) {
                     System.out.println(snapshot.getValue());
+                     arrayList= new ArrayList<>();
                     arrayList.add(snapshot.getValue(Event.class));
                     RecyclerView rv= view.findViewById(R.id.recyclerView);
-                    SimpleRVAdapter srv = new SimpleRVAdapter((fragment1.FrgamentInteractionListener)getActivity(),arrayList);
+                    SimpleRVAdapter srv = new SimpleRVAdapter(arrayList);
 
                     rv.setLayoutManager(new LinearLayoutManager(fragment1.this.getContext()));
                     rv.setAdapter(srv);
@@ -72,8 +78,9 @@ public class fragment1 extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), recyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
-                        AppCompatActivity activity = (AppCompatActivity)view.getContext();
-                        activity.getSupportFragmentManager().beginTransaction().replace(R.id.frag1, new fragment2()).addToBackStack(null).commit();
+                        listener.onEventSelect(arrayList.get(position));
+//                        AppCompatActivity activity = (AppCompatActivity)view.getContext();
+//                        activity.getSupportFragmentManager().beginTransaction().replace(R.id.frag1, new fragment2()).addToBackStack(null).commit();
                     }
 
 
@@ -86,7 +93,7 @@ public class fragment1 extends Fragment {
     }
 
 
-    interface FrgamentInteractionListener {
+    interface FragmentInteractionListener {
         void onEventSelect(Event event);
     }
 
