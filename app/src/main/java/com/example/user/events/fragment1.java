@@ -2,6 +2,7 @@ package com.example.user.events;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -57,7 +59,7 @@ public class fragment1 extends Fragment {
                      arrayList= new ArrayList<>();
                     arrayList.add(snapshot.getValue(Event.class));
                     RecyclerView rv= view.findViewById(R.id.recyclerView);
-                    SimpleRVAdapter srv = new SimpleRVAdapter(arrayList);
+                    SimpleRVAdaptor srv = new SimpleRVAdaptor(arrayList);
 
                     rv.setLayoutManager(new LinearLayoutManager(fragment1.this.getContext()));
                     rv.setAdapter(srv);
@@ -92,11 +94,64 @@ public class fragment1 extends Fragment {
         return view;
     }
 
+    public  class SimpleViewHolder extends RecyclerView.ViewHolder{
+        private TextView eventName;
+        private TextView organiser;
+        private TextView date;
+        private ImageView poster;
+
+        public SimpleViewHolder(LayoutInflater inflater, ViewGroup parent) {
+            //super(itemView);
+            super(inflater.inflate(R.layout.events_list,parent,false));
+            eventName = (TextView) itemView.findViewById(R.id.EventName);
+            organiser = (TextView) itemView.findViewById(R.id.Organizer);
+            date = (TextView) itemView.findViewById(R.id.Date);
+            poster=(ImageView) itemView.findViewById(R.id.poster);
+        }
+
+        public void bind (Event event){
+
+            eventName.setText(event.getname());
+            organiser.setText(event.getOrganizer());
+            date.setText(event.getDate());
+
+        }
+    }
+
+    private class SimpleRVAdaptor extends RecyclerView.Adapter<SimpleViewHolder>{
+        private List<Event> Events;
+        public SimpleRVAdaptor (List<Event> events){
+            Events = events;
+
+        }
+
+        @NonNull
+        @Override
+        public SimpleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            return new SimpleViewHolder(LayoutInflater.from(parent.getContext()),parent);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull SimpleViewHolder holder, int position) {
+            Event event = Events.get(position);
+            holder.bind(event);
+        }
+
+        @Override
+        public int getItemCount() {
+            return Events.size();
+        }
+    }
+
+
+
+
 
     interface FragmentInteractionListener {
         void onEventSelect(Event event);
     }
-
-
 }
+
+
+
 

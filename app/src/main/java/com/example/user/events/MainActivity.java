@@ -15,15 +15,15 @@ fragment1.FragmentInteractionListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        FragmentManager fm=getSupportFragmentManager();
-        fragment1 fragment1= new fragment1();
-        fragment2 fragment2=new fragment2();
-        // Fragment f=fm.findFragmentById(R.id.frag);
+        FragmentManager fm = getSupportFragmentManager();
+        fragment1 fragment1 = new fragment1();
+        fragment2 fragment2 = new fragment2();
+        fragment2 fragment3 = new fragment2();
 
-       fm.beginTransaction().add(R.id.frag1,fragment1).commit();
-       fm.beginTransaction().add(R.id.frag2,fragment2).commit();
+        fm.beginTransaction().add(R.id.frag1, fragment1).commit();
+        fm.beginTransaction().add(R.id.frag2, fragment2).commit();
+        fm.beginTransaction().add(R.id.frag3, fragment3).commit();
     }
-
     @Override
     public void onEventSelect(Event event) {
         FragmentManager fm = getSupportFragmentManager();
